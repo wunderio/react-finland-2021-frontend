@@ -1,28 +1,29 @@
-import * as React from "react"
-import Head from "next/head"
+import * as React from "react";
+import Head from "next/head";
 import {
   getPathsFromContext,
   getResourceFromContext,
   getResourceTypeFromContext,
-} from "next-drupal"
-import { GetStaticPropsContext } from "next"
-import { NodeArticle } from "@/nodes/node-article"
-import { NodeBasicPage } from "@/components/nodes/node-basic-page"
+} from "next-drupal";
+import { GetStaticPropsContext } from "next";
+import { NodeArticle } from "@/nodes/node-article";
+import { NodeBasicPage } from "@/components/nodes/node-basic-page";
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 interface NodePageProps {
-  preview: GetStaticPropsContext["preview"]
-  node: Record<string, any>
+  preview: GetStaticPropsContext["preview"];
+  node: Record<string, any>;
 }
 
 export default function NodePage({ node, preview }: NodePageProps) {
-  const [showPreviewAlert, setShowPreviewAlert] = React.useState<boolean>(false)
+  const [showPreviewAlert, setShowPreviewAlert] =
+    React.useState<boolean>(false);
 
-  if (!node) return null
+  if (!node) return null;
 
   React.useEffect(() => {
-    setShowPreviewAlert(preview && window.top === window.self)
-  }, [])
+    setShowPreviewAlert(preview);
+  }, []);
 
   return (
     <>
@@ -46,40 +47,41 @@ export default function NodePage({ node, preview }: NodePageProps) {
       {node.type === "node--page" && <NodeBasicPage node={node} />}
       {node.type === "node--article" && <NodeArticle node={node} />}
     </>
-  )
+  );
 }
 
 export async function getStaticPaths(context) {
   return {
     paths: await getPathsFromContext(["node--article", "node--page"], context),
     fallback: true,
-  }
+  };
 }
 
 export async function getStaticProps(context) {
-  const type = await getResourceTypeFromContext(context)
+  const type = await getResourceTypeFromContext(context);
 
   if (!type) {
     return {
       notFound: true,
-    }
+    };
   }
 
-  let params = {}
+  let params = {};
   if (type === "node--article") {
     params = {
       include: "field_image,uid",
-    }
+    };
   }
 
   const node = await getResourceFromContext(type, context, {
     params,
-  })
+  });
 
-  if (!node?.status) {
+  // If it's not published and not in preview, return 404
+  if (!node?.status && !context.preview) {
     return {
       notFound: true,
-    }
+    };
   }
 
   return {
@@ -88,5 +90,5 @@ export async function getStaticProps(context) {
       node,
     },
     revalidate: 60,
-  }
+  };
 }

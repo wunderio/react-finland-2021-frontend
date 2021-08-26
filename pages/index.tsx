@@ -1,6 +1,6 @@
-import Head from "next/head"
-import { getResourceCollectionFromContext } from "next-drupal"
-import { NodeArticleTeaser } from "@/components/nodes/node-article"
+import Head from "next/head";
+import { getResourceCollectionFromContext } from "next-drupal";
+import { NodeArticleTeaser } from "@/components/nodes/node-article";
 
 export default function IndexPage({ articles }) {
   return (
@@ -27,7 +27,7 @@ export default function IndexPage({ articles }) {
         )}
       </div>
     </>
-  )
+  );
 }
 
 export async function getStaticProps(context) {
@@ -38,14 +38,15 @@ export async function getStaticProps(context) {
       params: {
         include: "field_image,uid",
         sort: "-created",
+        "filter[status]": "1",
       },
     }
-  )
+  );
 
   return {
     props: {
       articles,
     },
     revalidate: 60,
-  }
+  };
 }
