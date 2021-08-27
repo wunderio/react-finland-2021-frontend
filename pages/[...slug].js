@@ -2,7 +2,7 @@ import Head from "next/head";
 import { ArticleFull } from "../components/Article";
 import { getPathsFromContext, getResourceFromContext } from "next-drupal";
 
-export default function ArticlePage({ node }) {
+export default function ArticlePage({ node, preview }) {
   if (!node) return null;
 
   return (
@@ -13,6 +13,13 @@ export default function ArticlePage({ node }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ArticleFull article={node} />
+      {preview && (
+        <div className="preview-exit-button">
+          <a href="/api/exit-preview" className="button">
+            Exit preview
+          </a>
+        </div>
+      )}
     </div>
   );
 }
@@ -31,7 +38,7 @@ export async function getStaticProps(context) {
     },
   });
 
-  if (!node?.status) {
+  if (!node?.status && !context.preview) {
     return {
       notFound: true,
     };
@@ -39,6 +46,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
+      preview: context.preview || false,
       node,
     },
     revalidate: 60,
