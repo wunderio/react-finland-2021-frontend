@@ -2,7 +2,7 @@ import Head from "next/head";
 import { ArticleFull } from "../components/Article";
 import { getPathsFromContext, getResourceFromContext } from "next-drupal";
 
-export default function ArticlePage({ node, preview }) {
+export default function ArticlePage({ node }) {
   if (!node) return null;
 
   return (
