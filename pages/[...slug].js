@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { ArticleFull } from "../components/Article";
 import { getPathsFromContext, getResourceFromContext } from "next-drupal";
 
@@ -15,9 +16,9 @@ export default function ArticlePage({ node, preview }) {
       <ArticleFull article={node} />
       {preview && (
         <div className="preview-exit-button">
-          <a href="/api/exit-preview" className="button">
-            Exit preview
-          </a>
+          <Link href="/api/exit-preview">
+            <a className="button">Exit preview</a>
+          </Link>
         </div>
       )}
     </div>
