@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { useMenu } from "next-drupal";
 
 export default function Layout({ children }) {
+  const { tree } = useMenu("main");
   return (
     <div className="wrapper">
       <div className="box header">
@@ -9,11 +11,13 @@ export default function Layout({ children }) {
       </div>
       <div className="box sidebar">
         <ul>
-          <li>
-            <Link href="#">
-              <a>Menu link text</a>
-            </Link>
-          </li>
+          {tree?.map((link) => (
+            <li key={link.id}>
+              <Link href={link.url}>
+                <a>{link.title}</a>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
       <div className="box content">{children}</div>
