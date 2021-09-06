@@ -34,6 +34,7 @@ export async function getStaticProps(context) {
         include: "uid,field_image",
         sort: "-created",
         "filter[status]": "1",
+        "filter[langcode]": context.locale,
       },
     }
   );
