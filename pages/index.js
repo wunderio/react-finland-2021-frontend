@@ -1,6 +1,9 @@
 import Head from "next/head";
+import { getResourceCollectionFromContext } from "next-drupal";
 
-export default function Home() {
+import { ArticleTeaser } from "../components/Article";
+
+export default function Home({ articles }) {
   return (
     <div id="main-container">
       <Head>
@@ -9,7 +12,36 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="main">Here we will show a list of posts.</main>
+      <main className="main">
+        {articles?.length ? (
+          articles.map((article) => (
+            <ArticleTeaser key={article.id} article={article} />
+          ))
+        ) : (
+          <p>No articles found.</p>
+        )}
+      </main>
     </div>
   );
+}
+
+export async function getStaticProps(context) {
+  const articles = await getResourceCollectionFromContext(
+    "node--article",
+    context,
+    {
+      params: {
+        include: "uid,field_image",
+        sort: "-created",
+        "filter[status]": "1",
+      },
+    }
+  );
+
+  return {
+    props: {
+      articles,
+    },
+    revalidate: 60,
+  };
 }
