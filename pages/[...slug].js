@@ -36,6 +36,7 @@ export async function getStaticProps(context) {
   const node = await getResourceFromContext("node--article", context, {
     params: {
       include: "field_image,uid",
+      "filter[langcode]": context.locale,
     },
   });
 
