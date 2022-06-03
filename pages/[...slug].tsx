@@ -1,9 +1,13 @@
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { getPathsFromContext, getResourceFromContext } from "next-drupal";
 import Head from "next/head";
 import Link from "next/link";
 import { ArticleFull } from "../components/Article";
-import { getPathsFromContext, getResourceFromContext } from "next-drupal";
 
-export default function ArticlePage({ node, preview }) {
+export default function ArticlePage({
+  node,
+  preview,
+}): InferGetStaticPropsType<typeof getStaticProps> {
   if (!node) return null;
 
   return (
@@ -32,7 +36,7 @@ export async function getStaticPaths(context) {
   };
 }
 
-export async function getStaticProps(context) {
+export const getStaticProps: GetStaticProps = async (context) => {
   const node = await getResourceFromContext("node--article", context, {
     params: {
       include: "field_image,uid",
@@ -53,4 +57,4 @@ export async function getStaticProps(context) {
     },
     revalidate: 60,
   };
-}
+};
