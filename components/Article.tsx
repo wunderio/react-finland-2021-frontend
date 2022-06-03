@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { z } from "zod";
 
 export function ArticleTeaser({ article }) {
   return (
@@ -30,25 +31,25 @@ export function ArticleTeaser({ article }) {
   );
 }
 
-type FieldImage = {
-  uri: {
-    url: string;
-  };
-  resourceIdObjMeta: {
-    alt: string;
-  };
-};
+export const article_schema = z.object({
+  title: z.string(),
+  uid: z.object({
+    display_name: z.string(),
+  }),
+  field_image: z.object({
+    uri: z.object({
+      url: z.string(),
+    }),
+    resourceIdObjMeta: z.object({
+      alt: z.string(),
+    }),
+  }),
+  body: z.object({
+    processed: z.string(),
+  }),
+});
 
-type ArticleProps = {
-  title: string;
-  uid: {
-    display_name: string;
-  };
-  field_image: FieldImage;
-  body: {
-    processed: string;
-  };
-};
+type ArticleProps = z.infer<typeof article_schema>;
 
 export function ArticleFull(props: ArticleProps) {
   const { title, uid, field_image, body } = props;
