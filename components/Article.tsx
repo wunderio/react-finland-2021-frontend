@@ -30,31 +30,53 @@ export function ArticleTeaser({ article }) {
   );
 }
 
-export function ArticleFull({ article }) {
+type FieldImage = {
+  uri: {
+    url: string;
+  };
+  resourceIdObjMeta: {
+    alt: string;
+  };
+};
+
+type ArticleProps = {
+  title: string;
+  uid: {
+    display_name: string;
+  };
+  field_image: FieldImage;
+  body: {
+    processed: string;
+  };
+};
+
+export function ArticleFull(props: ArticleProps) {
+  const { title, uid, field_image, body } = props;
+
   return (
     <article className="article-full">
-      <h2>{article.title}</h2>
+      <h2>{title}</h2>
       <small>
-        By <strong>{article.uid.display_name}</strong>
+        By <strong>{uid.display_name}</strong>
       </small>
 
-      {article.field_image?.uri && (
+      {field_image?.uri && (
         <figure>
           <Image
-            src={`${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${article.field_image.uri.url}`}
+            src={`${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${field_image.uri.url}`}
             width={768}
             height={400}
             layout="responsive"
             objectFit="cover"
-            alt={article.field_image.resourceIdObjMeta.alt}
+            alt={field_image.resourceIdObjMeta.alt}
           />
         </figure>
       )}
 
-      {article.body?.processed && (
+      {body?.processed && (
         <div
           className="article-body"
-          dangerouslySetInnerHTML={{ __html: article.body?.processed }}
+          dangerouslySetInnerHTML={{ __html: body?.processed }}
         />
       )}
     </article>
