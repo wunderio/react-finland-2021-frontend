@@ -1,4 +1,4 @@
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { getPathsFromContext, getResourceFromContext } from "next-drupal";
 import Head from "next/head";
 import Link from "next/link";
@@ -36,7 +36,7 @@ export async function getStaticPaths(context) {
   };
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   const node = await getResourceFromContext("node--article", context, {
     params: {
       include: "field_image,uid",
